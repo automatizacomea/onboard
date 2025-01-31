@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPT Maker</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">
+                <img src="https://api.iconify.design/lucide:bot.svg?color=white" alt="Logo">
+                <span>GPT Maker</span>
+            </div>
+            <div class="nav-item" data-page="dashboard">Dashboard</div>
+            <div class="nav-item" data-page="agents">Agentes</div>
+            <div class="nav-item" data-page="chat">Chat</div>
+            <div class="nav-item" data-page="team">Equipe</div>
+            <div class="nav-item" data-page="billing">Faturamento</div>
+        </div>
+        
+        <div class="main-content">
+            <!-- Step 1: Login -->
+            <div id="login" class="page active">
+                <div class="step-indicator">
+                    <div class="step active">1. Cadastro</div>
+                    <div class="step">2. Confirmação</div>
+                    <div class="step">3. Configuração</div>
+                </div>
+                <div class="card">
+                    <h1>Crie sua conta</h1>
+                    <p>Comece agora e crie seu primeiro bot em 5 minutos.</p>
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label for="name">Seu Nome</label>
+                            <input type="text" id="name" placeholder="Nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="company">Nome da sua empresa</label>
+                            <input type="text" id="company" placeholder="Preencha o nome da sua empresa" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" placeholder="Informe seu endereço de e-mail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="whatsapp">Número de Whatsapp</label>
+                            <input type="tel" id="whatsapp" placeholder="Informe seu telefone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Senha</label>
+                            <input type="password" id="password" placeholder="Escolha uma senha de acesso" required>
+                        </div>
+                        <button type="submit">CRIAR CONTA</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Step 2: Confirmação -->
+            <div id="confirmation" class="page">
+                <div class="step-indicator">
+                    <div class="step completed">1. Cadastro</div>
+                    <div class="step active">2. Confirmação</div>
+                    <div class="step">3. Configuração</div>
+                </div>
+                <div class="card">
+                    <h1>Código de ativação</h1>
+                    <p>Enviamos um código de ativação no seu Whatsapp.</p>
+                    <div class="code-inputs">
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                        <input type="text" maxlength="1" required>
+                    </div>
+                    <button id="confirmCode">CONFIRMAR E CONTINUAR</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Configuração Inicial -->
+            <div id="initial-setup" class="page">
+                <div class="step-indicator">
+                    <div class="step completed">1. Cadastro</div>
+                    <div class="step completed">2. Confirmação</div>
+                    <div class="step active">3. Configuração</div>
+                </div>
+                <div class="card">
+                    <h1>Configure seu primeiro bot</h1>
+                    <form id="setupForm">
+                        <div class="form-group">
+                            <label>Tipo de Negócio</label>
+                            <select required>
+                                <option value="">Selecione o tipo de negócio</option>
+                                <option value="ecommerce">E-commerce</option>
+                                <option value="service">Prestação de Serviços</option>
+                                <option value="education">Educação</option>
+                                <option value="other">Outro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Objetivo Principal</label>
+                            <select required>
+                                <option value="">Selecione o objetivo</option>
+                                <option value="sales">Vendas</option>
+                                <option value="support">Suporte</option>
+                                <option value="leads">Geração de Leads</option>
+                                <option value="other">Outro</option>
+                            </select>
+                        </div>
+                        <button type="submit">COMEÇAR</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Dashboard -->
+            <div id="dashboard" class="page">
+                <div class="header">
+                    <h1>Dashboard</h1>
+                    <div class="period-selector">
+                        <button class="active">Hoje</button>
+                        <button>7 dias</button>
+                        <button>30 dias</button>
+                        <button>Personalizado</button>
+                    </div>
+                </div>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-title">Atendimentos concluídos</div>
+                        <div class="card-value">0</div>
+                        <div class="card-description">Nenhum atendimento concluído</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Atendimentos em andamento</div>
+                        <div class="card-value">0</div>
+                        <div class="card-description">Nenhum atendimento em andamento</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">Tempo médio de atendimento</div>
+                        <div class="card-value">--</div>
+                        <div class="card-description">Tempo humano médio até dar solução</div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="card">
+                        <h3>Atendimentos por hora</h3>
+                        <div class="chart-placeholder"></div>
+                    </div>
+                    <div class="card">
+                        <h3>Satisfação dos clientes</h3>
+                        <div class="chart-placeholder"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Agentes -->
+            <div id="agents" class="page">
+                <div class="header">
+                    <h1>Agentes</h1>
+                    <button class="button" id="createAgent">Criar agente</button>
+                </div>
+                
+                <!-- Lista de Agentes -->
+                <div id="agentsList" class="agents-grid">
+                    <!-- Será preenchido via JavaScript -->
+                </div>
+
+                <!-- Modal de Criação de Agente -->
+                <div id="createAgentModal" class="modal">
+                    <div class="modal-content">
+                        <h2>Criar Novo Agente</h2>
+                        <form id="agentForm">
+                            <div class="form-group">
+                                <label>Nome do Agente</label>
+                                <input type="text" required placeholder="Ex: Assistente de Vendas">
+                            </div>
+                            <div class="form-group">
+                                <label>Personalidade</label>
+                                <select required>
+                                    <option value="professional">Profissional</option>
+                                    <option value="friendly">Amigável</option>
+                                    <option value="casual">Casual</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Conhecimento Base</label>
+                                <textarea placeholder="Insira o conhecimento base do agente..."></textarea>
+                            </div>
+                            <div class="button-group">
+                                <button type="button" class="button secondary" id="cancelAgent">Cancelar</button>
+                                <button type="submit" class="button">Criar Agente</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chat -->
+            <div id="chat" class="page">
+                <h1>Chat</h1>
+                <div class="tabs">
+                    <div class="tab active">Todos</div>
+                    <div class="tab">Em espera</div>
+                    <div class="tab">Meus</div>
+                </div>
+                <div class="chat-container">
+                    <div class="chat-list">
+                        <!-- Lista de conversas -->
+                    </div>
+                    <div class="chat-messages">
+                        <div class="messages-container">
+                            <!-- Mensagens -->
+                        </div>
+                        <div class="message-input">
+                            <textarea placeholder="Digite sua mensagem..."></textarea>
+                            <button class="send-button">
+                                <img src="https://api.iconify.design/lucide:send.svg?color=white" alt="Enviar">
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Equipe -->
+            <div id="team" class="page">
+                <div class="header">
+                    <h1>Equipe</h1>
+                    <button class="button" id="inviteTeam">+ Convidar membro</button>
+                </div>
+                
+                <!-- Lista de Membros -->
+                <div class="team-grid">
+                    <!-- Será preenchido via JavaScript -->
+                </div>
+
+                <!-- Modal de Convite -->
+                <div id="inviteModal" class="modal">
+                    <div class="modal-content">
+                        <h2>Convidar Membro</h2>
+                        <form id="inviteForm">
+                            <div class="form-group">
+                                <label>E-mail</label>
+                                <input type="email" required placeholder="Digite o e-mail do membro">
+                            </div>
+                            <div class="form-group">
+                                <label>Função</label>
+                                <select required>
+                                    <option value="admin">Administrador</option>
+                                    <option value="manager">Gerente</option>
+                                    <option value="agent">Agente</option>
+                                </select>
+                            </div>
+                            <div class="permissions-grid">
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_dashboard">
+                                    <label for="perm_dashboard">Dashboard</label>
+                                </div>
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_agents">
+                                    <label for="perm_agents">Agentes</label>
+                                </div>
+                                <div class="permission-item">
+                                    <input type="checkbox" id="perm_chat">
+                                    <label for="perm_chat">Chat</label>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button type="button" class="button secondary" id="cancelInvite">Cancelar</button>
+                                <button type="submit" class="button">Enviar Convite</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Faturamento -->
+            <div id="billing" class="page">
+                <h1>Faturamento</h1>
+                <div class="plans-container">
+                    <div class="plans-grid">
+                        <div class="plan-card">
+                            <div class="plan-header">
+                                <h3>Básico</h3>
+                                <div class="plan-price">
+                                    <span class="currency">R$</span>
+                                    <span class="amount">99</span>
+                                    <span class="period">/mês</span>
+                                </div>
+                            </div>
+                            <ul class="plan-features">
+                                <li>1 Agente</li>
+                                <li>1.000 mensagens/mês</li>
+                                <li>Suporte por e-mail</li>
+                            </ul>
+                            <button class="button">Selecionar Plano</button>
+                        </div>
+                        <div class="plan-card featured">
+                            <div class="plan-header">
+                                <h3>Profissional</h3>
+                                <div class="plan-price">
+                                    <span class="currency">R$</span>
+                                    <span class="amount">199</span>
+                                    <span class="period">/mês</span>
+                                </div>
+                            </div>
+                            <ul class="plan-features">
+                                <li>3 Agentes</li>
+                                <li>5.000 mensagens/mês</li>
+                                <li>Suporte prioritário</li>
+                                <li>Analytics avançado</li>
+                            </ul>
+                            <button class="button">Selecionar Plano</button>
+                        </div>
+                        <div class="plan-card">
+                            <div class="plan-header">
+                                <h3>Empresarial</h3>
+                                <div class="plan-price">
+                                    <span class="currency">R$</span>
+                                    <span class="amount">499</span>
+                                    <span class="period">/mês</span>
+                                </div>
+                            </div>
+                            <ul class="plan-features">
+                                <li>10 Agentes</li>
+                                <li>Mensagens ilimitadas</li>
+                                <li>Suporte 24/7</li>
+                                <li>API personalizada</li>
+                                <li>Treinamento dedicado</li>
+                            </ul>
+                            <button class="button">Selecionar Plano</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Histórico de Faturas -->
+                    <div class="card invoices-card">
+                        <h3>Histórico de Faturas</h3>
+                        <table class="invoices-table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Plano</th>
+                                    <th>Valor</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Será preenchido via JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
