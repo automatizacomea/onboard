@@ -187,6 +187,27 @@
                                 <label>Conhecimento Base</label>
                                 <textarea placeholder="Insira o conhecimento base do agente..."></textarea>
                             </div>
+                            <div class="form-group">
+                                <label>Cor do Agente</label>
+                                <input type="color" name="agentColor" value="#3182ce">
+                            </div>
+                            <div class="form-group">
+                                <label>Ícone do Agente</label>
+                                <select name="agentIcon" required>
+                                    <option value="bot">Bot</option>
+                                    <option value="user">Usuário</option>
+                                    <option value="briefcase">Maleta</option>
+                                    <option value="heart">Coração</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Formato de Resposta</label>
+                                <select name="responseFormat" required>
+                                    <option value="text">Texto Simples</option>
+                                    <option value="markdown">Markdown</option>
+                                    <option value="html">HTML</option>
+                                </select>
+                            </div>
                             <div class="button-group">
                                 <button type="button" class="button secondary" id="cancelAgent">Cancelar</button>
                                 <button type="submit" class="button">Criar Agente</button>
@@ -357,3 +378,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
