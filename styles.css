@@ -1,3 +1,23 @@
+/* Estilos gerais */
+body {
+  font-family: "Inter", sans-serif;
+}
+
+/* Estilos para a navegação */
+.nav-item {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #4a5568;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+  background-color: #edf2f7;
+  color: #2d3748;
+}
+
 /* Estilos para os agentes */
 .agent-header {
   display: flex;
@@ -7,61 +27,91 @@
 }
 
 .agent-header img {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
 }
 
 .chat-agent-item {
   background: white;
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.chat-agent-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .agent-info {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
 }
 
 .agent-info img {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }
 
-/* Ajustes no modal */
+/* Estilos para o modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
 .modal-content {
   background: white;
   padding: 2rem;
-  border-radius: 8px;
+  border-radius: 0.5rem;
   width: 100%;
   max-width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
+  color: #4a5568;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #e2e8f0;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   background: white;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #4299e1;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
 }
 
 .form-group textarea {
-  min-height: 100px;
+  min-height: 120px;
   resize: vertical;
 }
 
@@ -72,36 +122,46 @@
   margin-top: 2rem;
 }
 
-/* Ajustes gerais */
-.card {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
+/* Estilos para botões */
 .button {
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  border: none;
-  background: #3182ce;
-  color: white;
-  cursor: pointer;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.25rem;
   font-weight: 500;
-}
-
-.button.secondary {
-  background: transparent;
-  border: 1px solid #3182ce;
-  color: #3182ce;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .button:hover {
-  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.button.primary {
+  background-color: #4299e1;
+  color: white;
+}
+
+.button.primary:hover {
+  background-color: #3182ce;
+}
+
+.button.secondary {
+  background-color: #edf2f7;
+  color: #4a5568;
+}
+
+.button.secondary:hover {
+  background-color: #e2e8f0;
 }
 
 .button.small {
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem 1rem;
   font-size: 0.875rem;
 }
 
+/* Responsividade */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
