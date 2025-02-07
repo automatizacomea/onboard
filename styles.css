@@ -1,3 +1,4 @@
+/* Estilos gerais */
 :root {
   --primary: #4f46e5;
   --primary-dark: #4338ca;
@@ -9,7 +10,6 @@
   --danger: #ef4444;
 }
 
-/* Estilos gerais */
 body {
   font-family: "Inter", sans-serif;
   background: #f8fafc;
@@ -94,10 +94,12 @@ body {
   width: 100%;
   max-width: 500px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .form-group label {
@@ -111,11 +113,16 @@ body {
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.5rem;
   border: 1px solid #e2e8f0;
   border-radius: 0.25rem;
   background: white;
   transition: border-color 0.3s ease;
+}
+
+.form-group select[multiple] {
+  height: auto;
+  min-height: 100px;
 }
 
 .form-group input:focus,
@@ -124,11 +131,6 @@ body {
   outline: none;
   border-color: #4299e1;
   box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
-}
-
-.form-group textarea {
-  min-height: 120px;
-  resize: vertical;
 }
 
 .button-group {
@@ -153,12 +155,12 @@ body {
 }
 
 .button.primary {
-  background-color: #4299e1;
+  background-color: var(--primary);
   color: white;
 }
 
 .button.primary:hover {
-  background-color: #3182ce;
+  background-color: var(--primary-dark);
 }
 
 .button.secondary {
@@ -180,9 +182,95 @@ body {
   color: white;
 }
 
+/* Estilos para mensagens markdown */
+.message {
+  position: relative;
+  line-height: 1.5;
+}
+
+.message pre {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+}
+
+.message code {
+  font-family: "Fira Code", monospace;
+  font-size: 0.9em;
+}
+
+.message p {
+  margin: 0.5rem 0;
+}
+
+.message h1,
+.message h2,
+.message h3 {
+  margin: 1rem 0 0.5rem;
+  font-weight: bold;
+}
+
+.message h1 {
+  font-size: 1.5em;
+}
+
+.message h2 {
+  font-size: 1.25em;
+}
+
+.message h3 {
+  font-size: 1.1em;
+}
+
+.message ul,
+.message ol {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.message li {
+  margin: 0.25rem 0;
+}
+
+.copy-button {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.message pre:hover .copy-button {
+  opacity: 1;
+}
+
+/* Estilos para mensagens de erro e sistema */
+.message.error {
+  background-color: var(--danger);
+  color: white;
+}
+
+.message.system {
+  background-color: var(--secondary);
+  color: white;
+  text-align: center;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
   .grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Ensure visibility */
+#app,
+.sidebar,
+main,
+.page {
+  display: block !important;
+}
+
+.hidden {
+  display: none !important;
 }
