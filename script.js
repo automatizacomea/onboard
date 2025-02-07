@@ -3,10 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const state = {
     currentStep: 1,
     agents: [],
-    chats: [],
-    settings: {
-      openaiKey: localStorage.getItem("openaiKey") || "",
-    },
+    chats: {},
+    instances: [],
   }
 
   // Elementos do DOM
@@ -15,34 +13,43 @@ document.addEventListener("DOMContentLoaded", () => {
   const cancelAgentBtn = document.getElementById("cancelAgent")
   const agentForm = document.getElementById("agentForm")
   const openaiKeyInput = document.getElementById("openaiKey")
-  const defaultOpenaiKeyInput = document.getElementById("defaultOpenaiKey")
   const chatAgentSelect = document.getElementById("chatAgent")
   const messageInput = document.getElementById("messageInput")
   const sendMessageBtn = document.getElementById("sendMessage")
+  const resetChatBtn = document.getElementById("resetChat")
   const chatMessages = document.getElementById("chatMessages")
-  const saveSettingsBtn = document.getElementById("saveSettings")
+  const createInstanceBtn = document.getElementById("createInstance")
+  const createInstanceModal = document.getElementById("createInstanceModal")
+  const cancelInstanceBtn = document.getElementById("cancelInstance")
+  const connectInstanceBtn = document.getElementById("connectInstance")
 
-  // Gerenciamento do Modal
-  if (createAgentBtn) {
-    createAgentBtn.addEventListener("click", () => {
-      createAgentModal.classList.add("active")
-    })
-  }
-
-  if (cancelAgentBtn) {
-    cancelAgentBtn.addEventListener("click", () => {
-      createAgentModal.classList.remove("active")
-      agentForm.reset()
-    })
-  }
-
-  // Fechar modal clicando fora
-  createAgentModal.addEventListener("click", (e) => {
-    if (e.target === createAgentModal) {
-      createAgentModal.classList.remove("active")
-      agentForm.reset()
+  // Gerenciamento dos Modais
+  function setupModal(modalElement, openBtn, closeBtn) {
+    if (openBtn) {
+      openBtn.addEventListener("click", () => {
+        modalElement.classList.add("active")
+      })
     }
-  })
+
+    if (closeBtn) {
+      closeBtn.addEventListener("click", () => {
+        modalElement.classList.remove("active")
+        const form = modalElement.querySelector("form")
+        if (form) form.reset()
+      })
+    }
+
+    modalElement.addEventListener("click", (e) => {
+      if (e.target === modalElement) {
+        modalElement.classList.remove("active")
+        const form = modalElement.querySelector("form")
+        if (form) form.reset()
+      }
+    })
+  }
+
+  setupModal(createAgentModal, createAgentBtn, cancelAgentBtn)
+  setupModal(createInstanceModal, createInstanceBtn, cancelInstanceBtn)
 
   // Gerenciamento de Agentes
   if (agentForm) {
@@ -57,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
         knowledge: formData.get("knowledge"),
         icon: formData.get("icon"),
         responseFormat: formData.get("responseFormat"),
-        model: "gpt-4", // Definindo GPT-4 como modelo padrão
+        model: "gpt-4",
       }
 
       if (!agent.name || !agent.personality) {
@@ -97,9 +104,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     <p class="text-gray-600 mb-2">Personalidade: ${agent.personality}</p>
                     <p class="text-gray-600 mb-4">Formato de Resposta: ${agent.responseFormat}</p>
-                    <div class="flex justify-between">
+                    <div class="flex justify-between gap-2">
                         <button class="button secondary small" onclick="editAgent(${agent.id})">Editar</button>
                         <button class="button primary small" onclick="startChatWithAgent(${agent.id})">Chat</button>
+                        <button class="button danger small" onclick="deleteAgent(${agent.id})">Excluir</button>
                     </div>
                 </div>
             `,
@@ -107,7 +115,71 @@ document.addEventListener("DOMContentLoaded", () => {
             .join("")
   }
 
-  // Atualização do select de agentes no chat
+  // Funções de gerenciamento de agentes
+  window.editAgent = (agentId) => {
+    const agent = state.agents.find((a) => a.id === agentId)
+    if (!agent) return
+
+    createAgentModal.classList.add("active")
+    const form = document.getElementById("agentForm")
+
+    form.querySelector("#agentName").value = agent.name
+    form.querySelector("#agentPersonality").value = agent.personality
+    form.querySelector("#agentKnowledge").value = agent.knowledge || ""
+    form.querySelector("#agentIcon").value = agent.icon
+    form.querySelector("#responseFormat").value = agent.responseFormat
+
+    // Atualiza o handler do formulário para edição
+    form.onsubmit = (e) => {
+      e.preventDefault()
+      const formData = new FormData(form)
+
+      const updatedAgent = {
+        ...agent,
+        name: formData.get("name"),
+        personality: formData.get("personality"),
+        knowledge: formData.get("knowledge"),
+        icon: formData.get("icon"),
+        responseFormat: formData.get("responseFormat"),
+      }
+
+      const index = state.agents.findIndex((a) => a.id === agentId)
+      state.agents[index] = updatedAgent
+
+      updateAgentsList()
+      updateChatAgentSelect()
+      form.reset()
+      createAgentModal.classList.remove("active")
+      localStorage.setItem("agents", JSON.stringify(state.agents))
+
+      // Restaura o handler original
+      form.onsubmit = null
+    }
+  }
+
+  window.deleteAgent = (agentId) => {
+    if (!confirm("Tem certeza que deseja excluir este agente?")) return
+
+    state.agents = state.agents.filter((a) => a.id !== agentId)
+    updateAgentsList()
+    updateChatAgentSelect()
+    localStorage.setItem("agents", JSON.stringify(state.agents))
+  }
+
+  window.startChatWithAgent = (agentId) => {
+    const agent = state.agents.find((a) => a.id === agentId)
+    if (!agent) return
+
+    // Navega para a página de chat
+    navigateToPage("chatsPage")
+
+    // Seleciona o agente no select
+    if (chatAgentSelect) {
+      chatAgentSelect.value = agent.id
+    }
+  }
+
+  // Gerenciamento do Chat
   function updateChatAgentSelect() {
     if (!chatAgentSelect) return
 
@@ -123,12 +195,11 @@ document.addEventListener("DOMContentLoaded", () => {
         `
   }
 
-  // Gerenciamento do Chat
   if (sendMessageBtn && messageInput && chatMessages) {
     sendMessageBtn.addEventListener("click", async () => {
       const message = messageInput.value.trim()
       const selectedAgentId = chatAgentSelect.value
-      const openaiKey = openaiKeyInput.value || state.settings.openaiKey
+      const openaiKey = openaiKeyInput.value
 
       if (!message || !selectedAgentId || !openaiKey) {
         alert("Por favor, preencha todos os campos necessários")
@@ -142,30 +213,66 @@ document.addEventListener("DOMContentLoaded", () => {
       addMessageToChat("user", message)
       messageInput.value = ""
 
-      // Simula resposta do agente (aqui você implementaria a chamada real para a API da OpenAI)
-      setTimeout(() => {
-        addMessageToChat("agent", `Resposta do agente ${agent.name}: ${message}`)
-      }, 1000)
+      try {
+        // Simula chamada à API da OpenAI (implementar integração real aqui)
+        const response = await simulateOpenAIResponse(message, agent)
+        addMessageToChat("agent", response)
+      } catch (error) {
+        addMessageToChat("error", "Erro ao processar mensagem. Por favor, tente novamente.")
+      }
+    })
+  }
+
+  if (resetChatBtn) {
+    resetChatBtn.addEventListener("click", () => {
+      if (!confirm("Tem certeza que deseja resetar a conversa?")) return
+
+      if (chatMessages) {
+        chatMessages.innerHTML = ""
+      }
+
+      const selectedAgentId = chatAgentSelect.value
+      if (selectedAgentId) {
+        state.chats[selectedAgentId] = []
+      }
     })
   }
 
   function addMessageToChat(type, message) {
     const messageElement = document.createElement("div")
-    messageElement.className = `p-3 mb-2 rounded-lg ${type === "user" ? "bg-primary text-white ml-auto" : "bg-gray-100"} max-w-[80%]`
+    messageElement.className = `p-3 mb-2 rounded-lg ${type === "user" ? "bg-primary text-white ml-auto" : type === "error" ? "bg-danger text-white" : "bg-gray-100"} max-w-[80%]`
     messageElement.textContent = message
     chatMessages.appendChild(messageElement)
     chatMessages.scrollTop = chatMessages.scrollHeight
+
+    // Salva a mensagem no estado
+    const selectedAgentId = chatAgentSelect.value
+    if (selectedAgentId) {
+      if (!state.chats[selectedAgentId]) {
+        state.chats[selectedAgentId] = []
+      }
+      state.chats[selectedAgentId].push({ type, message })
+    }
   }
 
-  // Gerenciamento de Configurações
-  if (saveSettingsBtn) {
-    saveSettingsBtn.addEventListener("click", () => {
-      const openaiKey = defaultOpenaiKeyInput.value
-      if (openaiKey) {
-        state.settings.openaiKey = openaiKey
-        localStorage.setItem("openaiKey", openaiKey)
-        alert("Configurações salvas com sucesso!")
+  // Simulação de resposta da OpenAI (substituir por integração real)
+  async function simulateOpenAIResponse(message, agent) {
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    return `[${agent.name}] Resposta simulada para: ${message}`
+  }
+
+  // Gerenciamento de Instâncias WhatsApp
+  if (connectInstanceBtn) {
+    connectInstanceBtn.addEventListener("click", () => {
+      const phoneNumber = document.getElementById("phoneNumber").value
+      if (!phoneNumber) {
+        alert("Por favor, insira um número de telefone")
+        return
       }
+
+      // Implementar lógica de conexão do WhatsApp aqui
+      alert("Função de conexão do WhatsApp será implementada aqui")
+      createInstanceModal.classList.remove("active")
     })
   }
 
@@ -175,10 +282,6 @@ document.addEventListener("DOMContentLoaded", () => {
     state.agents = JSON.parse(savedAgents)
     updateAgentsList()
     updateChatAgentSelect()
-  }
-
-  if (defaultOpenaiKeyInput) {
-    defaultOpenaiKeyInput.value = state.settings.openaiKey
   }
 
   // Navegação
