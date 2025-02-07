@@ -1,53 +1,98 @@
-<!-- Modal de Criação de Agente -->
-<div id="createAgentModal" class="modal">
-    <div class="modal-content">
-        <h2>Criar Novo Agente</h2>
-        <form id="agentForm">
-            <div class="form-group">
-                <label for="agentName">Nome do Agente</label>
-                <input type="text" id="agentName" name="name" required placeholder="Ex: Assistente de Vendas">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Agentes IA</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <nav class="w-64 bg-white shadow-md">
+            <div class="p-6">
+                <h1 class="text-2xl font-bold text-gray-800">Agentes IA</h1>
             </div>
-            <div class="form-group">
-                <label for="agentPersonality">Personalidade</label>
-                <select id="agentPersonality" name="personality" required>
-                    <option value="">Selecione uma personalidade</option>
-                    <option value="professional">Profissional</option>
-                    <option value="friendly">Amigável</option>
-                    <option value="casual">Casual</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="agentKnowledge">Conhecimento Base</label>
-                <textarea id="agentKnowledge" name="knowledge" placeholder="Insira o conhecimento base do agente..."></textarea>
-            </div>
-            <div class="form-group">
-                <label for="agentColor">Cor do Agente</label>
-                <input type="color" id="agentColor" name="color" value="#3182ce">
-            </div>
-            <div class="form-group">
-                <label for="agentIcon">Ícone do Agente</label>
-                <select id="agentIcon" name="icon" required>
-                    <option value="">Selecione um ícone</option>
-                    <option value="bot">Bot</option>
-                    <option value="user">Usuário</option>
-                    <option value="briefcase">Maleta</option>
-                    <option value="heart">Coração</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="responseFormat">Formato de Resposta</label>
-                <select id="responseFormat" name="responseFormat" required>
-                    <option value="">Selecione um formato</option>
-                    <option value="text">Texto Simples</option>
-                    <option value="markdown">Markdown</option>
-                    <option value="html">HTML</option>
-                </select>
-            </div>
-            <div class="button-group">
-                <button type="button" class="button secondary" id="cancelAgent">Cancelar</button>
-                <button type="submit" class="button">Criar Agente</button>
-            </div>
-        </form>
-    </div>
-</div>
+            <ul class="space-y-2 p-4">
+                <li><a href="#" class="nav-item active" data-page="agentsPage">Meus Agentes</a></li>
+                <li><a href="#" class="nav-item" data-page="chatsPage">Chats</a></li>
+                <li><a href="#" class="nav-item" data-page="settingsPage">Configurações</a></li>
+            </ul>
+        </nav>
 
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto p-8">
+            <!-- Agents Page -->
+            <div id="agentsPage" class="page active">
+                <h2 class="text-3xl font-bold mb-6">Meus Agentes</h2>
+                <button id="createAgent" class="button mb-6">Criar Novo Agente</button>
+                <div id="agentsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- Chats Page -->
+            <div id="chatsPage" class="page hidden">
+                <h2 class="text-3xl font-bold mb-6">Chats</h2>
+                <div id="chatAgentsList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="settingsPage" class="page hidden">
+                <h2 class="text-3xl font-bold mb-6">Configurações</h2>
+                <!-- Add settings content here -->
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Criação de Agente -->
+    <div id="createAgentModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4">Criar Novo Agente</h2>
+            <form id="agentForm">
+                <div class="form-group">
+                    <label for="agentName">Nome do Agente</label>
+                    <input type="text" id="agentName" name="name" required placeholder="Ex: Assistente de Vendas">
+                </div>
+                <div class="form-group">
+                    <label for="agentPersonality">Personalidade</label>
+                    <select id="agentPersonality" name="personality" required>
+                        <option value="">Selecione uma personalidade</option>
+                        <option value="professional">Profissional</option>
+                        <option value="friendly">Amigável</option>
+                        <option value="casual">Casual</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="agentKnowledge">Conhecimento Base</label>
+                    <textarea id="agentKnowledge" name="knowledge" placeholder="Insira o conhecimento base do agente..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="agentIcon">Ícone do Agente</label>
+                    <select id="agentIcon" name="icon" required>
+                        <option value="">Selecione um ícone</option>
+                        <option value="bot">Bot</option>
+                        <option value="user">Usuário</option>
+                        <option value="briefcase">Maleta</option>
+                        <option value="heart">Coração</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="responseFormat">Formato de Resposta</label>
+                    <select id="responseFormat" name="responseFormat" required>
+                        <option value="">Selecione um formato</option>
+                        <option value="text">Texto Simples</option>
+                        <option value="markdown">Markdown</option>
+                        <option value="html">HTML</option>
+                    </select>
+                </div>
+                <div class="button-group">
+                    <button type="button" class="button secondary" id="cancelAgent">Cancelar</button>
+                    <button type="submit" class="button">Criar Agente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
