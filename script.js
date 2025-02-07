@@ -14,13 +14,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (createAgentBtn) {
     createAgentBtn.addEventListener("click", () => {
-      createAgentModal.classList.add("active")
+      createAgentModal.classList.remove("hidden")
     })
   }
 
   if (cancelAgentBtn) {
     cancelAgentBtn.addEventListener("click", () => {
-      createAgentModal.classList.remove("active")
+      createAgentModal.classList.add("hidden")
       agentForm.reset()
     })
   }
@@ -29,35 +29,25 @@ document.addEventListener("DOMContentLoaded", () => {
     agentForm.addEventListener("submit", function (e) {
       e.preventDefault()
 
-      // Captura todos os campos do formulário
       const formData = new FormData(this)
       const agent = {
         id: Date.now(),
         name: formData.get("name"),
         personality: formData.get("personality"),
         knowledge: formData.get("knowledge"),
-        color: formData.get("color"),
         icon: formData.get("icon"),
         responseFormat: formData.get("responseFormat"),
       }
 
-      // Validação básica
       if (!agent.name || !agent.personality) {
         alert("Por favor, preencha todos os campos obrigatórios")
         return
       }
 
-      // Adiciona o agente ao estado
       state.agents.push(agent)
-
-      // Atualiza a interface
       updateAgentsList()
-
-      // Limpa e fecha o formulário
       this.reset()
-      createAgentModal.classList.remove("active")
-
-      // Salva no localStorage para persistência
+      createAgentModal.classList.add("hidden")
       localStorage.setItem("agents", JSON.stringify(state.agents))
     })
   }
@@ -68,32 +58,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     agentsList.innerHTML =
       state.agents.length === 0
-        ? `<div class="card center">
-                <img src="https://api.iconify.design/lucide:bot.svg?color=white" alt="Robot">
-                <h2>Vamos criar seu primeiro agente?</h2>
-                <p>Nenhum agente foi cadastrado, crie seu primeiro agente em 5 minutos.</p>
-                <button class="button" onclick="document.getElementById('createAgent').click()">CRIAR AGENTE</button>
+        ? `<div class="text-center p-8 bg-white rounded-lg shadow">
+                   <img src="https://api.iconify.design/lucide:bot.svg" alt="Robot" class="mx-auto mb-4 w-16 h-16 text-blue-500">
+                   <h2 class="text-2xl font-bold mb-2">Vamos criar seu primeiro agente?</h2>
+                   <p class="text-gray-600 mb-4">Nenhum agente foi cadastrado, crie seu primeiro agente em 5 minutos.</p>
+                   <button class="button primary" onclick="document.getElementById('createAgent').click()">CRIAR AGENTE</button>
                </div>`
         : state.agents
             .map(
               (agent) => `
-                <div class="card">
-                    <div class="agent-header" style="color: ${agent.color}">
-                        <img src="https://api.iconify.design/lucide:${agent.icon}.svg?color=${agent.color}" alt="${agent.name}">
-                        <h3>${agent.name}</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="agent-header">
+                        <img src="https://api.iconify.design/lucide:${agent.icon}.svg" alt="${agent.name}" class="w-8 h-8">
+                        <h3 class="text-xl font-semibold">${agent.name}</h3>
                     </div>
-                    <p>Personalidade: ${agent.personality}</p>
-                    <p>Formato de Resposta: ${agent.responseFormat}</p>
-                    <div class="button-group">
-                        <button class="button secondary" onclick="editAgent(${agent.id})">Editar</button>
-                        <button class="button" onclick="trainAgent(${agent.id})">Treinar</button>
+                    <p class="text-gray-600 mb-2">Personalidade: ${agent.personality}</p>
+                    <p class="text-gray-600 mb-4">Formato de Resposta: ${agent.responseFormat}</p>
+                    <div class="flex justify-between">
+                        <button class="button secondary small" onclick="editAgent(${agent.id})">Editar</button>
+                        <button class="button primary small" onclick="trainAgent(${agent.id})">Treinar</button>
                     </div>
                 </div>
             `,
             )
             .join("")
 
-    // Atualiza também a lista de agentes no chat
     updateChatAgentsList()
   }
 
@@ -104,13 +93,13 @@ document.addEventListener("DOMContentLoaded", () => {
     chatAgentsList.innerHTML = state.agents
       .map(
         (agent) => `
-            <div class="chat-agent-item" style="border-left: 4px solid ${agent.color}">
+            <div class="chat-agent-item">
                 <div class="agent-info">
-                    <img src="https://api.iconify.design/lucide:${agent.icon}.svg?color=${agent.color}" alt="${agent.name}">
-                    <h4>${agent.name}</h4>
+                    <img src="https://api.iconify.design/lucide:${agent.icon}.svg" alt="${agent.name}" class="w-6 h-6">
+                    <h4 class="text-lg font-semibold">${agent.name}</h4>
                 </div>
-                <p>Personalidade: ${agent.personality}</p>
-                <button class="button small" onclick="startChatWithAgent(${agent.id})">Iniciar Chat</button>
+                <p class="text-gray-600 mb-3">Personalidade: ${agent.personality}</p>
+                <button class="button primary small w-full" onclick="startChatWithAgent(${agent.id})">Iniciar Chat</button>
             </div>
         `,
       )
@@ -121,25 +110,22 @@ document.addEventListener("DOMContentLoaded", () => {
   window.editAgent = (agentId) => {
     const agent = state.agents.find((a) => a.id === agentId)
     if (!agent) return
-
-    // Implementar lógica de edição
     console.log("Editando agente:", agent)
+    // Implementar lógica de edição
   }
 
   window.trainAgent = (agentId) => {
     const agent = state.agents.find((a) => a.id === agentId)
     if (!agent) return
-
-    // Implementar lógica de treinamento
     console.log("Treinando agente:", agent)
+    // Implementar lógica de treinamento
   }
 
   window.startChatWithAgent = (agentId) => {
     const agent = state.agents.find((a) => a.id === agentId)
     if (!agent) return
-
-    // Implementar lógica de início de chat
     console.log("Iniciando chat com agente:", agent)
+    // Implementar lógica de início de chat
   }
 
   // Carrega os agentes salvos ao iniciar
@@ -162,16 +148,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function navigateToPage(pageName) {
     const pages = document.querySelectorAll(".page")
-    pages.forEach((page) => page.classList.remove("active"))
+    pages.forEach((page) => page.classList.add("hidden"))
     navItems.forEach((nav) => nav.classList.remove("active"))
 
     const selectedPage = document.getElementById(pageName)
     const selectedNav = document.querySelector(`[data-page="${pageName}"]`)
 
     if (selectedPage && selectedNav) {
-      selectedPage.classList.add("active")
+      selectedPage.classList.remove("hidden")
       selectedNav.classList.add("active")
     }
   }
 })
-
